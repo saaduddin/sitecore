@@ -1,7 +1,7 @@
 {
   "$schema": "./.sitecore/schemas/RootConfigurationFile.schema.json",
   "modules": [
-    "./TODO/*.module.json"
+    "./ser/*.module.json"
   ],
   "plugins": [
     "Sitecore.DevEx.Extensibility.Publishing@5.2.113",

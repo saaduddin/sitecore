@@ -1,0 +1,77 @@
+﻿@model LearningSitecore.Feature.BasicContent.Models.PageListModel
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<div id="mainResult">
+    @foreach (var str in Model.itemNameCollection)
+    {
+        <p>@str</p>
+    }
+</div>
+
+<input type="hidden" id="TotalPages" value="@Model.TotalPageCount" />
+<input type="hidden" id="CurrentPage" value="1" />
+<br />
+<br />
+
+<a id="PageInt" value=""><<</a>
+
+@for (int i = 1; i <= Model.TotalPageCount; i++)
+{
+    <a id="PageInt" value="@i">@i</a>
+}
+
+<a id="PageInt" value="">>></a>
+
+<br />
+<br />
+<br />
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#PageInt").click(function () {
+            var currentPage = $("#CurrentPage").val();
+            var nextPage = Number(currentPage) + 1;
+            var previousPage = Number(currentPage) - 1;
+            var totalPages = $('#TotalPages').val();
+
+            var valueObject = $(this).text();
+
+            if (valueObject == ">>") {
+                if (Number(nextPage) <= Number(totalPages)) {
+                    valueObject = nextPage;
+                }
+                else {
+                    valueObject = "1";
+                }
+            }
+
+
+            if (valueObject == "<<") {
+                if (Number(previousPage) > 1) {
+                    valueObject = previousPage;
+                }
+                else {
+                    valueObject = "1";
+                }
+            }
+
+            $('CurrentPage').val(valueObject);
+
+            $.ajax({
+                url: '@Url.Action("PostMethod", "LearningSitecore.Feature.BasicContent.Controllers.PaginationController, LearningSitecore.Feature.BasicContent")',
+                data: { PageInt: valueObject },
+                success: function (data) {
+                    $("#mainResult").html(data);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert(xhr.responseText);
+                }
+            });
+
+        });
+    });
+</script>

@@ -1,0 +1,121 @@
+﻿@using Sitecore.Mvc
+@using Sitecore.Mvc.Presentation
+@using Sitecore.Data
+@using Sitecore.Data.Items
+
+@model LearningSitecore.Feature.BasicContent.Models.BlogListModel
+
+<style>
+    .content {
+        text-align: center;
+        font-family: system-ui;
+    }
+
+
+    .pagination a {
+        color: black;
+        padding: 8px 16px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: .3s;
+    }
+
+        .pagination a.active {
+            background-color: black;
+            color: white;
+        }
+
+        .pagination a:hover:not(.active) {
+            background-color: lightgray;
+        }
+
+    .search {
+        padding: 1em;
+        border-radius: 3em;
+        border: 3px solid;
+    }
+
+    .link {
+        text-decoration: none;
+        color: inherit;
+    }
+
+    hr {
+        width: 25em;
+        border: 1px solid;
+    }
+</style>
+<div class="content">
+
+    <button class="search" type="button" id="resetButton" onclick="restoreDefaults()">Reset</button>
+    <input type="text" class="search" id="searchText" placeholder="Search..." required />
+    <button class="search" type="button" id="searchButton" onclick="handleClick()">Search</button>
+
+    <div id="searchResults"></div>
+
+
+    <div id="defaultResults">
+
+        @foreach (var post in Model.Posts)
+        {
+            <a href="./Detail?id=@post.Id" class="link">
+                <h2>@post.Title</h2>
+                <p class="author-date">
+                    @post.Author &middot; @post.Date
+                </p>
+            </a>
+            <hr>
+
+        }
+
+    </div>
+
+    <br>
+
+    <div class="pagination">
+        <a href="#">❮</a>
+        <a href="#">1</a>
+        <a href="#" class="active">2</a>
+        <a href="#">3</a>
+        <a href="#">4</a>
+        <a href="#">5</a>
+        <a href="#">❯</a>
+    </div>
+
+</div>
+
+<script>
+    function handleClick() {
+        document.getElementById("defaultResults").style.display = "none";
+        document.getElementById("searchResults").innerHTML = "";
+        fetch("@Url.Action("DoSearch", "Search")?searchItem=" + document.getElementById("searchText").value, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }).then(response => response.json()).then(result => {
+                result.Results.map(item => {
+
+                    const regex = /{.*}/gm;
+                    const id = item.Id.match(regex) ? item.Id.match(regex)[0] : "";
+
+                    document.getElementById("searchResults").innerHTML += `
+        <a href="./Detail?id=${id}" class="link">
+            <h2>${item.Title}</h2>
+            <p class="author-date">
+                ${item.Author} &middot; ${item.Date}
+            </p>
+        </a>
+            <hr>
+					`;
+				});
+			}).catch(error => {
+				alert('error');
+			});
+}
+
+function restoreDefaults() {
+        document.getElementById("defaultResults").style.display = "block";
+        document.getElementById("searchResults").innerHTML = "";
+}
+</script>

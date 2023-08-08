@@ -1,0 +1,40 @@
+﻿<h2>Search</h2>
+<div class="form-example">
+    <input type="text" name="name" id="searchText" required>
+</div>
+<br />
+<div class="form-example">
+    <button class="favorite styled" type="button" id="searchButton" onclick="handleClick()">
+        Search
+    </button>
+</div>
+<h3>Search results</h3>
+<div id="searchResults"></div>
+<script>
+function handleClick(){
+        fetch("@Url.Action("DoSearch", "Search")?searchItem=" + document.getElementById("searchText").value, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }).then(response => response.json()).then(result => {
+                result.Results.map(item => {
+
+                    const regex = /{.*}/gm;
+                    const id = item.Id.match(regex) ? item.Id.match(regex)[0] : "";
+
+                    document.getElementById("searchResults").insertAdjacentHTML("afterbegin", `
+        <a href="./Detail?id=${id}" class="link">
+            <h2>${item.Title}</h2>
+            <p class="author-date">
+                ${item.Author} &middot; ${item.Date}
+            </p>
+        </a>
+            <hr>
+					`);
+				});
+			}).catch(error => {
+				alert('error');
+			});
+}
+</script>

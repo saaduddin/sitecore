@@ -2,6 +2,11 @@
     "namespace": "LearningSitecore.Content",
 	"items": {
   "includes": [
+	{
+		"name": "Blog",
+		"path": "/sitecore/content/Home/Blog"
+	},
+	
     {
       "name": "Basic Content",
      "path": "/sitecore/templates/Feature/Basic Content"

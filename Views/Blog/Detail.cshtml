@@ -1,0 +1,57 @@
+﻿@using Sitecore.Mvc
+@using Sitecore.Mvc.Presentation
+@using Sitecore.Data
+@using Sitecore.Data.Items
+
+@model LearningSitecore.Feature.BasicContent.Models.BlogDetailModel
+
+<style>
+    .content {
+        text-align: center;
+        font-family: system-ui;
+    }
+
+
+    .pagination a {
+        color: black;
+        padding: 8px 16px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: .3s;
+    }
+
+        .pagination a.active {
+            background-color: black;
+            color: white;
+        }
+
+        .pagination a:hover:not(.active) {
+            background-color: lightgray;
+        }
+
+    .button {
+        padding: 1em;
+        width: 35em;
+        border-radius: 3em;
+        border: 3px solid;
+        display: inline-block;
+        color: inherit;
+    }
+
+    hr {
+        width: 25em;
+        border: 1px solid;
+    }
+</style>
+<div class="content">
+
+    <a href="/" class="button">Back</a>
+
+    <h2>@Model.Title</h2>
+    <p>@Model.Id</p>
+    <p class="author-date">
+        @Model.Author &middot; @Model.Date
+    </p>
+
+
+</div>
